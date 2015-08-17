@@ -12,6 +12,21 @@
     height: 332px;
     background-color: #ddc7b2;
     box-sizing: border-box;
+    padding-top: 10px;
+    color: #76604a;
+    font-family: "Comic Sans MS", "Arial", serif;
+    text-align: center;
+}
+
+.stats-window .stats{
+    text-decoration: underline;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.stats-window .steps{
+    display: inline-block;
+    padding-bottom: 20px;
 }
 
 .game-board{
@@ -22,6 +37,10 @@
     margin: 10px 20px;
     padding: 3px 5px 4px;
     box-sizing: border-box;
+    -webkit-user-select: none; /* Chrome/Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
+    cursor: default;
 }
 
 .game-field{
@@ -62,5 +81,80 @@
     border-radius: 6px;
     box-shadow: 3px 3px 3px 0 #5f5145;
 }
+
+.pause-window{
+    background: #92e9fd;
+    width: 310px;
+    height: 332px;
+    float: left;
+    display: none;
+    padding-left: auto;
+    padding-right: auto;
+    text-align: center;
+    box-sizing: border-box;
+    border: 10px solid #6c9ef0;
+    border-style: double;
+    position: relative;
+}
+
+.pause-window img{
+    width: 100px;
+    margin: 100px auto;
+    z-index: 200;
+    position: relative;
+    border-top-right-radius: 400px;
+    border-bottom-right-radius: 400px;
+}
+
+.pause-window div{
+    color: #6fb8f8;
+    font-family: "Comic Sans MS", "Arial", serif;
+    font-size: 30px;
+    position: absolute;
+    z-index: 100;
+}
+
+.pause-window .icon{
+    color: #0176ff;
+    font-size: 150px;
+    width: 80px;
+    height: 95px;
+    position: relative;
+    top: 100px;
+    padding: 0;
+    margin: auto;
+    text-shadow: 0 0 150px #ffffff,
+               
+}
+
+.pause-window .icon:before{
+    position: relative;
+    left: -35px;
+    top: -43px;
+}
+
+.pause-window .icon:hover{
+    text-shadow:  3px 5px 5px #0060fa;
+}
+
+.win-window {
+    width: 430px;
+    height: 332px;
+    background-color: lightpink;
+    text-transform: capitalize;
+    text-align: center;
+    font-size: 40px;
+    box-sizing: border-box;
+    padding-top: 140px;
+    font-weight: bold;
+    color: deeppink;
+    display: none;
+}
+
+
+
+
+
+
 
 
