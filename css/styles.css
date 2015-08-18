@@ -54,7 +54,7 @@
 .button-panel{
     width: 260px;
     height: 40px;
-    background: url('/images/button.png') no-repeat;
+    background: url('../images/button.png') no-repeat;
     border-radius: 9px;
     box-shadow: 3px 3px 3px 0 #5f5145;
     text-align: center;
@@ -140,7 +140,7 @@
 .win-window {
     width: 430px;
     height: 332px;
-    background-color: lightpink;
+    background-color: #ffc7e3;
     text-transform: capitalize;
     text-align: center;
     font-size: 40px;
@@ -150,6 +150,49 @@
     color: deeppink;
     display: none;
 }
+
+[class |= "move"]
+{
+    transition: all 0.4s ease;
+    -webkit-transition: all 0.4s ease;
+}
+.move-right{
+    transform: translateX(65px);
+    transform: translateX(65px);
+}
+
+.move-left{
+    transform: translateX(-65px);
+    transform: translateX(-65px);
+}
+.move-up{
+    transform: translateY(-65px);
+    transform: translateY(-65px);
+}
+
+.move-down{
+    transform: translateY(65px);
+}
+
+.sound{
+    position: relative;
+    float: right;
+    right: 10px;
+    bottom: 20px;
+    color: #76604a;
+}
+
+.sound:hover{
+    text-shadow: -2px -2px 8px #fff;
+}
+
+.win-window span{
+    position: relative;
+    display: inline-block;
+    top: 50px;
+    right: 110px;
+}
+
 
 
 

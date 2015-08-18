@@ -11,9 +11,14 @@
         pauseWindow = document.querySelector(".pause-window"),
         resumeBtn = document.querySelector(".pause-window > .icon"),
         winWindow = document.querySelector(".win-window"),
-        gameWindow = document.querySelector(".game-window");
+        gameWindow = document.querySelector(".game-window"), 
+        clickSound = document.querySelector("#click"),
+        phoneSound = document.querySelector("#phone"),
+        soundBtn = document.querySelector(".sound"),
+        restartBtn = document.querySelector(".win-window span");
     
-    var dx = [0, 1, 0, -1], dy = [-1, 0, 1, 0];
+    var dx = [0, 1, 0, -1], dy = [-1, 0, 1, 0], dirs = ["up", "right", "down", "left"];
+    var dx = [0, 1, 0, -1], dy = [-1, 0, 1, 0], dirs = ["up", "right", "down", "left"];
     
     gameField.addEventListener("click", function(event) {
         if (event.target.parentNode === gameField)
@@ -26,8 +31,8 @@
     quitBtn.addEventListener("click", showScoreboard);
     resumeBtn.addEventListener("click", function(e) {
         var rect = resumeBtn.getBoundingClientRect(),
-            x = e.x - rect.left,
-            y = e.y - rect.top,
+            x = e.clientX - rect.left,
+            y = e.clientY - rect.top,
             w = resumeBtn.clientWidth,
             h = resumeBtn.clientHeight;
         
@@ -40,11 +45,25 @@
             resume();
         }
     });
+    soundBtn.addEventListener("click", function(){
+        if (soundBtn.getAttribute("data-icon") == "g")
+        {
+            soundBtn.setAttribute("data-icon", "f");
+            phoneSound.pause();
+        }
+        else{
+            soundBtn.setAttribute("data-icon", "g");
+            phoneSound.play();
+        }
+    });
+    restartBtn.addEventListener("click", function(){
+        requestAnimationFrame(initialize);
+    });
     
     for(var i = 1; i <= 15; ++i)
     {
         var cell = document.createElement("div");
-        cell.style.backgroundImage = "url(/images/cell.png)";
+        cell.style.backgroundImage = "url(images/cell.png)";
         cell.style.width = cellSize + "px";
         cell.style.height = cellSize + "px";
         cell.innerHTML = i + "";
@@ -62,7 +81,7 @@
     }
     
     initialize();
-
+    phoneSound.play();
     
     
     
@@ -71,8 +90,18 @@
     
     function initialize()
     {
+        if (winWindow.style.display != "none")
+        {
+            winWindow.style.display = "none";
+            gameWindow.style.display = "block";
+        }
         steps = 0;
         time = 0;
+        requestAnimationFrame(function() {
+            stepsSpan.innerHTML = "0";
+            pauseTimer();
+            drawTime();
+        });
         cells.forEach(function(cell) {
             var num = +cell.innerHTML - 1,
                 i = Math.floor(num/4),
@@ -92,34 +121,48 @@
     
     function checkForMove(cell)
     {
-        var j = pxToNum(cell.style.left)/cellSize, 
-            i = pxToNum(cell.style.top)/cellSize;
+        var j = Math.floor(pxToNum(cell.style.left)/cellSize), 
+            i = Math.floor(pxToNum(cell.style.top)/cellSize);
+        if (!ok(i) || !ok(j) || field[i][j] === 0)
+            return;
         for (var z = 0; z < 4; ++z)
         {
-            var nx = j + dx[z], ny = i + dy[z];
-            if (ok(nx) && ok(ny)
-                && field[ny][nx] === 0)
+            for (var t = 1; t <= 3; ++t)
             {
-                ++steps;
-                if (steps == 1)
+                var nx = j + t*dx[z], ny = i + t*dy[z];
+                if (ok(nx) && ok(ny)
+                    && field[ny][nx] === 0)
                 {
-                    restartTimer();
-                }
-                requestAnimationFrame(function() {
-                    move(cell, {y: i, x: j}, {y: ny, x: nx});
-                    if (win())
+                    if (steps == 0)
                     {
-                        gameWindow.style.display = "none";
-                        winWindow.style.display = "block";
-                    }
-                    stepsSpan.innerHTML = steps;
-                });
-                break;
+                        restartTimer();
+                    }    
+                    steps += t;
+
+                    (function(t, z) {
+                    requestAnimationFrame(function() {
+                        for (var tt = t - 1; tt >= 0; --tt)
+                        {
+                            var nom = field[i + tt*dy[z]][j + tt*dx[z]] - 1;
+                            move(cells[nom],
+                                 {y: i + tt*dy[z], x: j + tt*dx[z]},
+                                 {y: i + (tt + 1)*dy[z], x: j + dx[z]*(tt + 1)}, true);
+                        }
+                        if (win())
+                        {
+                            gameWindow.style.display = "none";
+                            winWindow.style.display = "block";
+                        }
+                        stepsSpan.innerHTML = steps;
+                    });
+                    })(t, z);
+                    break;
+                }
             }
         }
     }
     
-    function move(cell, from, to)
+    function move(cell, from, to, animate)
     {
         if (cell == undefined)
         {
@@ -130,8 +173,24 @@
         field[from.y][from.x] = 0;
         cell.style.zIndex = to.y*4 + to.x;
         
-        cell.style.left = to.x*cellSize + "px";
-        cell.style.top  = to.y*cellSize + "px";
+        var dir = findDir(to.x - from.x, to.y - from.y);
+        
+        if (animate === true)
+        {
+            cell.classList.add("move-" + dir);
+            cell.offsetHeight = cell.offsetHeight;
+            clickSound.play();
+            setTimeout(function() {
+                cell.classList.remove("move-" + dir);
+                cell.style.left = to.x*cellSize + "px";
+                cell.style.top  = to.y*cellSize + "px";
+
+            }, 420);
+        }
+        else{
+            cell.style.left = to.x*cellSize + "px";
+            cell.style.top  = to.y*cellSize + "px";
+        }
     }
     
     function ok(coord)
@@ -267,5 +326,11 @@
                 return false;
         }
         return true;
+    }
+    function findDir(x, y)
+    {
+        for (var i = 0; i < 4; ++i)
+            if (dx[i] === x && dy[i] === y)
+                return dirs[i];
     }
 })();
