@@ -1,6 +1,6 @@
 (function() {
     var field = [[], [], [], []], cellSize = 65, steps, time, timer,
-        cells = [], nums = [];
+        cells = [], nums = [], moving = false;
     var gameField = document.querySelector(".game-field"),
         shuffleBtn = document.querySelector(".shuffle-btn"),
         pauseBtn = document.querySelector(".pause-btn"),
@@ -21,7 +21,8 @@
     var dx = [0, 1, 0, -1], dy = [-1, 0, 1, 0], dirs = ["up", "right", "down", "left"];
     
     gameField.addEventListener("click", function(event) {
-        if (event.target.parentNode === gameField)
+        if (event.target.parentNode === gameField
+           && !moving)
             checkForMove(event.target);
     });
     shuffleBtn.addEventListener("click", function(){
@@ -164,6 +165,7 @@
     
     function move(cell, from, to, animate)
     {
+        moving = true;
         if (cell == undefined)
         {
             console.log(from.x + " " + from.y);
@@ -177,20 +179,25 @@
         
         if (animate === true)
         {
-            cell.classList.add("move-" + dir);
-            cell.offsetHeight = cell.offsetHeight;
-            clickSound.play();
+            requestAnimationFrame(function() {
+                cell.classList.add("move-" + dir);
+                cell.offsetHeight = cell.offsetHeight;
+                clickSound.play();
+            });
             setTimeout(function() {
-                cell.classList.remove("move-" + dir);
-                cell.style.left = to.x*cellSize + "px";
-                cell.style.top  = to.y*cellSize + "px";
+                requestAnimationFrame( function() {
+                    cell.classList.remove("move-" + dir);
+                    cell.style.left = to.x*cellSize + "px";
+                    cell.style.top  = to.y*cellSize + "px";
+                    moving = false;
+                });
 
-            }, 420);
+            }, 1020);
         }
-        else{
-            cell.style.left = to.x*cellSize + "px";
-            cell.style.top  = to.y*cellSize + "px";
-        }
+//        {
+//            cell.style.left = to.x*cellSize + "px";
+//            cell.style.top  = to.y*cellSize + "px";
+//        }
     }
     
     function ok(coord)

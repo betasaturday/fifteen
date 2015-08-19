@@ -151,27 +151,31 @@
     display: none;
 }
 
-[class |= "move"]
-{
-    transition: all 0.4s ease;
-    -webkit-transition: all 0.4s ease;
-}
-.move-right{
-    transform: translateX(65px);
-    transform: translateX(65px);
+.game-field [class |= "move"]{
+    transition: all 1s ease;
 }
 
-.move-left{
-    transform: translateX(-65px);
-    transform: translateX(-65px);
-}
-.move-up{
-    transform: translateY(-65px);
-    transform: translateY(-65px);
+.game-field .move-right{
+    -webkit-transform: translateX(65px);
+    transform: translateX(65px);
+    color: red;
 }
 
-.move-down{
+.game-field .move-left{
+    -webkit-transform: translateX(-65px);
+    transform: translateX(-65px);
+    color: red;
+}
+.game-field .move-up{
+    -webkit-transform: translateY(-65px);
+    transform: translateY(-65px);
+    color: red;
+}
+
+.game-field .move-down{
+    -webkit-transform: translateY(65px);
     transform: translateY(65px);
+    color: red;
 }
 
 .sound{
