@@ -152,7 +152,7 @@
 }
 
 .game-field [class |= "move"]{
-    transition: all 1s ease;
+    transition: all 0.4s ease;
 }
 
 .game-field .move-right{

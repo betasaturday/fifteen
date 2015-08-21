@@ -192,12 +192,13 @@
                     moving = false;
                 });
 
-            }, 1020);
+            }, 420);
         }
-//        {
-//            cell.style.left = to.x*cellSize + "px";
-//            cell.style.top  = to.y*cellSize + "px";
-//        }
+      else{
+            cell.style.left = to.x*cellSize + "px";
+            cell.style.top  = to.y*cellSize + "px";
+            moving = false;
+        }
     }
     
     function ok(coord)
